@@ -1,3 +1,4 @@
+HEAD
 # CareerConnect — Modern Full-Stack Recruitment Platform
 
 [![Java 21](https://img.shields.io/badge/Java-21-orange.svg)](https://www.oracle.com/java/)
@@ -402,3 +403,7 @@ c:\projecttt/
 ## 👥 Authors & Technical Training Credits
 
 Developed as a showcase enterprise application for the **Java Full Stack Development Technical Training Presentation**. Built with clean architecture, enterprise security patterns, and responsive UI principles.
+
+# careerconnect
+careeier conect
+ 812e672e71652fa5d225f270f34d88e3a56b2d9d
