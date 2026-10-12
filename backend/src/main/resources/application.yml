@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: careerconnect-backend
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 15MB
+
+server:
+  port: ${PORT:${SERVER_PORT:8080}}
+  error:
+    include-message: always
+    include-binding-errors: always
+
+# Spring Boot Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when_authorized
+
+# OpenAPI / Swagger
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: method
+
+# CareerConnect Custom App Settings
+careerconnect:
+  jwt:
+    secret: ${JWT_SECRET:CareerConnectSecretKeyMustBeAtLeast256BitsLongForHMACSHA256Signature2026ProductionSecureKey!}
+    expiration-ms: ${JWT_EXPIRATION_MS:86400000} # 24 hours
+    refresh-expiration-ms: ${JWT_REFRESH_EXPIRATION_MS:604800000} # 7 days
+  upload:
+    directory: ${UPLOAD_DIR:./uploads}
+    max-file-size-mb: ${MAX_FILE_SIZE_MB:10}
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173,https://*.onrender.com,*}

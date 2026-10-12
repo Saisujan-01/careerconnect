@@ -1,0 +1,392 @@
+{
+  "info": {
+    "_postman_id": "c9834289-5f21-4f81-a960-careerconnect01",
+    "name": "CareerConnect REST API",
+    "description": "Production REST API collection for CareerConnect Full-Stack Recruitment Platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login (Candidate / Recruiter / Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.token) {",
+                  "    pm.collectionVariables.set('authToken', jsonData.data.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"candidate.alex@example.com\",\n  \"password\": \"Candidate@123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Register New Candidate",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Emma Watson\",\n  \"email\": \"emma.watson@example.com\",\n  \"password\": \"Password@123\",\n  \"role\": \"CANDIDATE\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Get Current Authenticated User (/me)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Public Jobs & Companies",
+      "item": [
+        {
+          "name": "Search Published Jobs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/jobs?keyword=Senior&category=Engineering&workplaceType=REMOTE&page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["jobs"],
+              "query": [
+                { "key": "keyword", "value": "Senior" },
+                { "key": "category", "value": "Engineering" },
+                { "key": "workplaceType", "value": "REMOTE" },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Job Details by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/jobs/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["jobs", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Companies Directory",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/companies?page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["companies"],
+              "query": [
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Company Detail & Active Jobs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/companies/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["companies", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Candidate Operations",
+      "item": [
+        {
+          "name": "Get Candidate Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/candidate/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["candidate", "dashboard"]
+            }
+          }
+        },
+        {
+          "name": "Get Candidate Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/candidate/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["candidate", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Update Candidate Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone\": \"+1 (555) 234-5678\",\n  \"location\": \"San Francisco, CA\",\n  \"headline\": \"Senior Full Stack Software Engineer (Java / Spring / React)\",\n  \"summary\": \"Experienced developer with 6+ years designing microservices and distributed web applications.\",\n  \"skills\": \"Java, Spring Boot, React, TypeScript, MySQL, Docker, Kubernetes, AWS\",\n  \"education\": \"B.S. Computer Science, UC Berkeley\",\n  \"experience\": \"Senior Engineer at Apex Tech (3 yrs), Software Engineer at Beta Corp (3 yrs)\",\n  \"linkedinUrl\": \"https://linkedin.com/in/alexmorgan-demo\",\n  \"portfolioUrl\": \"https://alexmorgan.dev\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/candidate/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["candidate", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Submit Job Application",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jobId\": 1,\n  \"coverLetter\": \"I am thrilled to submit my application for this role. My strong background in Java, Spring Boot, and React aligns directly with your mission.\",\n  \"useProfileResume\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/candidate/applications/apply",
+              "host": ["{{baseUrl}}"],
+              "path": ["candidate", "applications", "apply"]
+            }
+          }
+        },
+        {
+          "name": "List My Applications",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/candidate/applications?page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["candidate", "applications"]
+            }
+          }
+        },
+        {
+          "name": "Save / Bookmark Job",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/candidate/saved-jobs/2",
+              "host": ["{{baseUrl}}"],
+              "path": ["candidate", "saved-jobs", "2"]
+            }
+          }
+        },
+        {
+          "name": "Withdraw Application",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/candidate/applications/1/withdraw",
+              "host": ["{{baseUrl}}"],
+              "path": ["candidate", "applications", "1", "withdraw"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Recruiter Operations",
+      "item": [
+        {
+          "name": "Get Recruiter Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/recruiter/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["recruiter", "dashboard"]
+            }
+          }
+        },
+        {
+          "name": "Create New Job Posting",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Lead Cloud Architect\",\n  \"description\": \"Lead our next-generation cloud migration and serverless initiatives.\",\n  \"responsibilities\": \"Architect scalable AWS solutions; Guide engineering best practices; Mentor junior developers.\",\n  \"skillsRequired\": \"AWS, Kubernetes, Terraform, Java 21, Spring Boot\",\n  \"qualifications\": \"7+ years building enterprise cloud solutions; AWS Certified Solutions Architect.\",\n  \"category\": \"Engineering\",\n  \"location\": \"Austin, TX\",\n  \"workplaceType\": \"HYBRID\",\n  \"employmentType\": \"FULL_TIME\",\n  \"experienceLevel\": \"Lead / Principal\",\n  \"salaryMin\": 165000,\n  \"salaryMax\": 210000,\n  \"salaryCurrency\": \"USD\",\n  \"isSalaryNegotiable\": true,\n  \"status\": \"PUBLISHED\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/recruiter/jobs",
+              "host": ["{{baseUrl}}"],
+              "path": ["recruiter", "jobs"]
+            }
+          }
+        },
+        {
+          "name": "Update Applicant Status (Pipeline Progression)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"SHORTLISTED\",\n  \"notes\": \"Passed initial screening round with flying colors. Advancing to technical panel interview.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/recruiter/applicants/1/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["recruiter", "applicants", "1", "status"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin Governance",
+      "item": [
+        {
+          "name": "Get Platform Metrics Dashboard",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "dashboard"]
+            }
+          }
+        },
+        {
+          "name": "List Users with Governance Filters",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/users?role=RECRUITER&page=0&size=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "users"],
+              "query": [
+                { "key": "role", "value": "RECRUITER" },
+                { "key": "page", "value": "0" },
+                { "key": "size", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Moderate Job Posting",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"moderationStatus\": \"APPROVED\",\n  \"moderationNotes\": \"Listing verified for professional quality and compliance standards.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/jobs/1/moderation",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "jobs", "1", "moderation"]
+            }
+          }
+        },
+        {
+          "name": "Inspect System Audit Logs",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{authToken}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/audit-logs?page=0&size=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "audit-logs"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
